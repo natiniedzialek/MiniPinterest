@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MiniPinterest.Web.Data;
+using MiniPinterest.Web.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<MiniPinterestDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MiniPinterestConnectionString"))
 );
+
+builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 
 var app = builder.Build();
 

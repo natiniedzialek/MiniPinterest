@@ -3,15 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using MiniPinterest.Web.Data;
 using MiniPinterest.Web.Models.Domain;
 using MiniPinterest.Web.Models.ViewModels;
+using MiniPinterest.Web.Repositories;
 
 namespace MiniPinterest.Web.Controllers
 {
     public class BoardsController : Controller
     {
-        private readonly MiniPinterestDbContext miniPinterestDbContext;
-        public BoardsController(MiniPinterestDbContext miniPinterestDbContext)
+        private readonly IBoardRepository boardRepository;
+        public BoardsController(IBoardRepository boardRepository)
         {
-            this.miniPinterestDbContext = miniPinterestDbContext;
+            this.boardRepository = boardRepository;
         }
 
         [HttpGet]
@@ -22,7 +23,7 @@ namespace MiniPinterest.Web.Controllers
 
         [HttpPost]
         [ActionName("Add")]
-        public IActionResult Add(AddBoardRequest addBoardRequest)
+        public async Task<IActionResult> Add(AddBoardRequest addBoardRequest)
         {
             Board board = new
             (
@@ -31,25 +32,24 @@ namespace MiniPinterest.Web.Controllers
                 addBoardRequest.IsPublic
             );
 
-            miniPinterestDbContext.Boards.Add(board);
-            miniPinterestDbContext.SaveChanges();
+            await boardRepository.AddAsync(board);
 
             return RedirectToAction("List");
         }
 
         [HttpGet]
         [ActionName("List")]
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
-            List<Board> boards = miniPinterestDbContext.Boards.ToList();
+            IEnumerable<Board> boards = await boardRepository.GetAllAsync();
 
             return View(boards);
         }
 
         [HttpGet]
-        public IActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            Board board = miniPinterestDbContext.Boards.Find(id);
+            Board ?board = await boardRepository.GetByIdAsync(id);
 
             if(board != null)
             {
@@ -71,38 +71,44 @@ namespace MiniPinterest.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(EditBoardRequest editBoardRequest)
+        public async Task<IActionResult> Edit(EditBoardRequest editBoardRequest)
         {
-            var board = miniPinterestDbContext.Boards.Find(editBoardRequest.Id);
+            Board board = new
+                (
+                    editBoardRequest.Id,
+                    editBoardRequest.UserId,
+                    editBoardRequest.Name,
+                    editBoardRequest.Description,
+                    editBoardRequest.CreatedAt,
+                    editBoardRequest.IsPublic,
+                    editBoardRequest.Pins
+                );
 
-            if(board != null)
+            Board updatedBoard = await boardRepository.UpdateAsync(board);
+
+            if (updatedBoard != null)
             {
-                board.Name = editBoardRequest.Name;
-                board.Description = editBoardRequest.Description;
-                board.IsPublic = editBoardRequest.IsPublic;
-                board.Pins = editBoardRequest.Pins;
-
-                miniPinterestDbContext.SaveChanges();
                 // success
-                return RedirectToAction("Edit", new { id = editBoardRequest.Id });
+            }
+            else
+            {
+                // error
             }
 
-            // error
             return RedirectToAction("Edit", new { id = editBoardRequest.Id });
         }
 
         [HttpPost]
-        public IActionResult Delete(EditBoardRequest editBoardRequest)
+        public async Task<IActionResult> Delete(EditBoardRequest editBoardRequest)
         {
-            Board board = miniPinterestDbContext.Boards.Find(editBoardRequest.Id);
-
-            if(board != null)
+            Board ?deletedBoard = await boardRepository.DeleteAsync(editBoardRequest.Id);
+            
+            if (deletedBoard != null)
             {
-                miniPinterestDbContext.Boards.Remove(board);
-                miniPinterestDbContext.SaveChanges();
-                // success
+                //success
                 return RedirectToAction("List");
             }
+
             // error
             return RedirectToAction("Edit", new { id = editBoardRequest.Id });
         }

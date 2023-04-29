@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<MiniPinterestDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("MiniPinterestConnectionString"))
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MiniPinterestConnectionString"))
 );
 
 var app = builder.Build();

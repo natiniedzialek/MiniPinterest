@@ -10,8 +10,6 @@ namespace MiniPinterest.Web.Data
         }
 
         public DbSet<Pin> Pins { get; set; }
-        public DbSet<Tag> Tags { get; set; }
         public DbSet<Board> Boards { get; set; }
-
     }
 }

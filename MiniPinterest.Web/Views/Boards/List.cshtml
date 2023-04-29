@@ -1,0 +1,87 @@
+﻿@model List<MiniPinterest.Web.Models.Domain.Board>
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Boards</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    @if (Model != null && Model.Any())
+    {
+        <div class="board-container" py-5>
+            @foreach (var board in Model)
+            {
+                <div class="board-item" data-url="@Url.Action("BoardDetails", "Board", new { id = board.Id })">
+                    <h2>@board.Name</h2>
+                    <p style="font-size:12px">
+                        @{
+                            string output = @board.IsPublic ? "Public" : "Private";
+                        }
+                        @output
+                    </p>
+                    <p class="description">@board.Description</p>
+                    <p style="font-size:12px">Created at @board.CreatedAt.ToString("MM/dd/yyyy")</p>
+                    <p>
+                        <a asp-area="" asp-controller="Boards" asp-action="Edit" asp-route-id="@board.Id">
+                            Edit
+                        </a>
+                    </p>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>
+            No boards created yet!
+        </p>
+    }
+</div>
+
+<style>
+    .board-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .board-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: calc(33.33% - 20px);
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .board-item:hover {
+        background-color: #f5f5f5;
+    }
+
+    .description {
+        font-size: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+</style>
+
+<script>
+    // Add a click event handler to each board container
+    document.querySelectorAll('.board-item').forEach(function (boardItem) {
+        boardItem.addEventListener('click', function () {
+            // Get the URL of the target page from the data-url attribute
+            var url = this.getAttribute('data-url');
+            // Navigate to the target page
+            window.location.href = url;
+        });
+    });
+</script>

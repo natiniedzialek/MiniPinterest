@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MiniPinterest.Web.Data;
 
@@ -11,9 +12,11 @@ using MiniPinterest.Web.Data;
 namespace MiniPinterest.Web.Migrations
 {
     [DbContext(typeof(MiniPinterestDbContext))]
-    partial class MiniPinterestDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230429103844_attributes")]
+    partial class attributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,12 +30,12 @@ namespace MiniPinterest.Web.Migrations
                     b.Property<Guid>("BoardsId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PinsId")
+                    b.Property<Guid>("PinsID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("BoardsId", "PinsId");
+                    b.HasKey("BoardsId", "PinsID");
 
-                    b.HasIndex("PinsId");
+                    b.HasIndex("PinsID");
 
                     b.ToTable("BoardPin");
                 });
@@ -66,11 +69,11 @@ namespace MiniPinterest.Web.Migrations
 
             modelBuilder.Entity("MiniPinterest.Web.Models.Domain.Pin", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AuthorId")
+                    b.Property<Guid>("AuthorID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -91,9 +94,39 @@ namespace MiniPinterest.Web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("Pins");
+                });
+
+            modelBuilder.Entity("MiniPinterest.Web.Models.Domain.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("PinTag", b =>
+                {
+                    b.Property<Guid>("PinsID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PinsID", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("PinTag");
                 });
 
             modelBuilder.Entity("BoardPin", b =>
@@ -106,7 +139,22 @@ namespace MiniPinterest.Web.Migrations
 
                     b.HasOne("MiniPinterest.Web.Models.Domain.Pin", null)
                         .WithMany()
-                        .HasForeignKey("PinsId")
+                        .HasForeignKey("PinsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PinTag", b =>
+                {
+                    b.HasOne("MiniPinterest.Web.Models.Domain.Pin", null)
+                        .WithMany()
+                        .HasForeignKey("PinsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MiniPinterest.Web.Models.Domain.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

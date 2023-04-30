@@ -24,21 +24,46 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Boards
+                                My Profile
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" 
-                                    asp-area="" 
-                                    asp-controller="Boards"
-                                    asp-action="Add">
-                                    Add Board</a>
-                                </li>
                                 <li>
                                     <a class="dropdown-item"
                                        asp-area=""
                                        asp-controller="Boards"
                                        asp-action="List">
-                                        My Boards
+                                       Boards
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-area=""
+                                       asp-controller="Pins"
+                                       asp-action="List">
+                                       Pins
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                New
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" 
+                                        asp-area="" 
+                                        asp-controller="Boards"
+                                        asp-action="Add">
+                                        Board
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-area=""
+                                       asp-controller="Pins"
+                                       asp-action="Add">
+                                       Pin
                                     </a>
                                 </li>
                             </ul>

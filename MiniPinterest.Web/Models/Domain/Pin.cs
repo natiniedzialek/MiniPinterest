@@ -8,7 +8,8 @@
         public string ?Description { get; set; }
         public string ImageUrl { get; set; }
         public string UrlHandle { get; set; }
-        public DateTime PublishedDate {  get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool IsPublic { get; set; }
         public ICollection<Board> Boards { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace MiniPinterest.Web.Repositories
 
         public async Task<IEnumerable<Board>> GetAllAsync()
         {
-            return await miniPinterestDbContext.Boards.ToListAsync();
+            return await miniPinterestDbContext.Boards.Include(x => x.Pins).ToListAsync();
         }
 
         public async Task<Board?> GetByIdAsync(Guid id)

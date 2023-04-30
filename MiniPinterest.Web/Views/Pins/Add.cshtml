@@ -1,0 +1,44 @@
+﻿@model MiniPinterest.Web.Models.ViewModels.AddPinRequest
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Add New Pin</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form method="post">
+        <div class="mb-3">
+            <label cladd="form-label">Title</label>
+            <input type="text" class="form-control" id="heading" asp-for="Title"/>
+        </div>
+
+        <div class="mb-3">
+            <label cladd="form-label">Description</label>
+            <input type="text" class="form-control" id="description" asp-for="Description" />
+        </div>
+
+        <div class="mb-3">
+            <label cladd="form-label">Image URL</label>
+            <input type="text" class="form-control" id="imageUrl" asp-for="ImageUrl" />
+        </div>
+
+        <div class="mb-3">
+            <label cladd="form-label">URL Handle</label>
+            <input type="text" class="form-control" id="urlHandle" asp-for="UrlHandle" />
+        </div>
+
+        <div class="form-check mb-3">
+            <label for="form-check-label">Public</label>
+            <input class="form-check-input" type="checkbox" id="public" value="true" asp-for="IsPublic">
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-dark">
+                Add Pin
+            </button>
+        </div>
+    </form>
+</div>

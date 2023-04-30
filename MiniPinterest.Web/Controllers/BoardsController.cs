@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MiniPinterest.Web.Data;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using MiniPinterest.Web.Models.Domain;
 using MiniPinterest.Web.Models.ViewModels;
 using MiniPinterest.Web.Repositories;
@@ -10,6 +9,7 @@ namespace MiniPinterest.Web.Controllers
     public class BoardsController : Controller
     {
         private readonly IBoardRepository boardRepository;
+
         public BoardsController(IBoardRepository boardRepository)
         {
             this.boardRepository = boardRepository;
@@ -25,12 +25,16 @@ namespace MiniPinterest.Web.Controllers
         [ActionName("Add")]
         public async Task<IActionResult> Add(AddBoardRequest addBoardRequest)
         {
-            Board board = new
-            (
-                addBoardRequest.Name,
-                addBoardRequest.Description,
-                addBoardRequest.IsPublic
-            );
+            Board board = new()
+            {
+                Id = Guid.NewGuid(),
+                AuthorId = Guid.NewGuid(),
+                Name = addBoardRequest.Name,
+                Description = addBoardRequest.Description,
+                CreatedAt = DateTime.Now,
+                IsPublic = addBoardRequest.IsPublic,
+                Pins = new List<Pin>()
+            };
 
             await boardRepository.AddAsync(board);
 
@@ -56,7 +60,7 @@ namespace MiniPinterest.Web.Controllers
                 EditBoardRequest editBoardRequest = new()
                 {
                     Id = board.Id,
-                    UserId = board.UserId,
+                    AuthorId = board.AuthorId,
                     Name = board.Name,
                     Description = board.Description,
                     CreatedAt = board.CreatedAt,
@@ -73,18 +77,18 @@ namespace MiniPinterest.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditBoardRequest editBoardRequest)
         {
-            Board board = new
-                (
-                    editBoardRequest.Id,
-                    editBoardRequest.UserId,
-                    editBoardRequest.Name,
-                    editBoardRequest.Description,
-                    editBoardRequest.CreatedAt,
-                    editBoardRequest.IsPublic,
-                    editBoardRequest.Pins
-                );
+            Board board = new()
+            {
+                    Id = editBoardRequest.Id,
+                    AuthorId = editBoardRequest.AuthorId,
+                    Name = editBoardRequest.Name,
+                    Description = editBoardRequest.Description,
+                    CreatedAt = editBoardRequest.CreatedAt,
+                    IsPublic = editBoardRequest.IsPublic,
+                    Pins = editBoardRequest.Pins
+            };
 
-            Board updatedBoard = await boardRepository.UpdateAsync(board);
+            Board ?updatedBoard = await boardRepository.UpdateAsync(board);
 
             if (updatedBoard != null)
             {

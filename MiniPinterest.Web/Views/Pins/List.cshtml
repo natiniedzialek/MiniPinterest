@@ -1,0 +1,27 @@
+﻿@model List<MiniPinterest.Web.Models.Domain.Pin>
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>My Pins</h1>
+    </div>
+</div>
+
+<div class="row row-cols-5 py-5">
+    @foreach (var pin in Model)
+    {
+        <div class="col">
+            <a href="@Url.Action("Details", "Pin", new { id = pin.Id })">
+                <img src="@pin.ImageUrl" alt="@pin.Title" class="img-fluid rounded-corners" />
+            </a>
+            <div class="text-center">@pin.Title</div>
+        </div>
+    }
+</div>
+
+<style>
+    .rounded-corners {
+        border-radius: 15px;
+    }
+</style>

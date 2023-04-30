@@ -8,15 +8,32 @@
     </div>
 </div>
 
-<div class="row row-cols-5 py-5">
-    @foreach (var pin in Model)
+
+<div class="row row-cols-5 row-with-margin">
+    @if (Model != null && Model.Any())
     {
-        <div class="col">
-            <a href="@Url.Action("Details", "Pin", new { id = pin.Id })">
-                <img src="@pin.ImageUrl" alt="@pin.Title" class="img-fluid rounded-corners" />
-            </a>
-            <div class="text-center">@pin.Title</div>
-        </div>
+        @foreach (var pin in Model)
+        {
+            <div class="col">
+                <a href="@Url.Action("Details", "Pin", new { id = pin.Id })">
+                    <img src="@pin.ImageUrl" alt="@pin.Title" class="img-fluid rounded-corners" />
+                </a>
+                <div class="text-center">
+                    @pin.Title
+                    <a asp-area=""
+                   asp-controller="Pins"
+                   asp-action="Edit"
+                   asp-route-id="@pin.Id"
+                    >Edit</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>
+            No pins created yet!
+        </p>
     }
 </div>
 
@@ -24,4 +41,10 @@
     .rounded-corners {
         border-radius: 15px;
     }
+
+    .row-with-margin {
+        margin: 30px;
+    }
 </style>
+
+

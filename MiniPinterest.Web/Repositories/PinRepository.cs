@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MiniPinterest.Web.Data;
 using MiniPinterest.Web.Models.Domain;
+using System.Net.NetworkInformation;
 
 namespace MiniPinterest.Web.Repositories
 {
@@ -20,24 +21,55 @@ namespace MiniPinterest.Web.Repositories
             return pin;
         }
 
-        public Task<Pin?> DeleteAsync(Guid id)
+        public async Task<Pin?> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            Pin existingPin = await miniPinterestDbContext.Pins.FindAsync(id);
+
+            if (existingPin != null)
+            {
+                miniPinterestDbContext.Pins.Remove(existingPin);
+                await miniPinterestDbContext.SaveChangesAsync();
+            }
+
+            return existingPin;
         }
 
         public async Task<IEnumerable<Pin>> GetAllAsync()
         {
-            return await miniPinterestDbContext.Pins.ToListAsync();
+            return await miniPinterestDbContext
+                .Pins
+                .Include(x => x.Boards)
+                .ToListAsync();
         }
 
-        public Task<Pin?> GetByIdAsync(Guid id)
+        public async Task<Pin?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await miniPinterestDbContext
+                .Pins
+                .Include(x => x.Boards)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<Pin?> UpdateAsync(Pin pin)
+        public async Task<Pin?> UpdateAsync(Pin pin)
         {
-            throw new NotImplementedException();
+            Pin ?existingPin = await miniPinterestDbContext
+                .Pins
+                .Include(x => x.Boards)
+                .FirstOrDefaultAsync(x => x.Id == pin.Id);
+
+            if(existingPin != null)
+            {
+                existingPin.Title = pin.Title;
+                existingPin.Description = pin.Description;
+                existingPin.UrlHandle = pin.UrlHandle;
+                existingPin.IsPublic = pin.IsPublic;
+                existingPin.Boards = pin.Boards;
+
+                await miniPinterestDbContext.SaveChangesAsync();
+                return existingPin;
+            }
+
+            return null;
         }
     }
 }

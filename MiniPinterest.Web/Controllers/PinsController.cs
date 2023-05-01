@@ -31,7 +31,6 @@ namespace MiniPinterest.Web.Controllers
                 Title = addPinRequest.Title,
                 Description = addPinRequest.Description,
                 ImageUrl = addPinRequest.ImageUrl,
-                UrlHandle = addPinRequest.UrlHandle,
                 CreatedAt = DateTime.Now,
                 IsPublic = addPinRequest.IsPublic,
                 Boards = new List<Board>()
@@ -65,7 +64,6 @@ namespace MiniPinterest.Web.Controllers
                     Title = pin.Title,
                     Description = pin.Description,
                     ImageUrl =pin.ImageUrl,
-                    UrlHandle = pin.UrlHandle,
                     CreatedAt = pin.CreatedAt,
                     IsPublic = pin.IsPublic,
                     Boards = pin.Boards
@@ -87,7 +85,6 @@ namespace MiniPinterest.Web.Controllers
                 Title = editPinRequest.Title,
                 Description = editPinRequest.Description,
                 ImageUrl = editPinRequest.ImageUrl,
-                UrlHandle = editPinRequest.UrlHandle,
                 CreatedAt = editPinRequest.CreatedAt,
                 IsPublic = editPinRequest.IsPublic,
                 Boards = editPinRequest.Boards

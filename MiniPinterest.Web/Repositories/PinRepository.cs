@@ -61,7 +61,6 @@ namespace MiniPinterest.Web.Repositories
             {
                 existingPin.Title = pin.Title;
                 existingPin.Description = pin.Description;
-                existingPin.UrlHandle = pin.UrlHandle;
                 existingPin.IsPublic = pin.IsPublic;
                 existingPin.Boards = pin.Boards;
 

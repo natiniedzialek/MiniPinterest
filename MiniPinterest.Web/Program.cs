@@ -13,6 +13,7 @@ builder.Services.AddDbContext<MiniPinterestDbContext>(options =>
 
 builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 builder.Services.AddScoped<IPinRepository, PinRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 
 var app = builder.Build();
 

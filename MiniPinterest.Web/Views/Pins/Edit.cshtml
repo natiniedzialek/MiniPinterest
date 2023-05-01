@@ -5,7 +5,7 @@
 
 <div class="bg-secondary bg-opacity-10 py-2">
     <div class="container">
-        <h1>Edit</h1>
+        <h1>Edit Pin</h1>
     </div>
 </div>
 
@@ -14,23 +14,17 @@
     {
         <form method="post">
             <div class="mb-3">
-                <label cladd="form-label">Title</label>
+                <img src="@Model.ImageUrl" id="imageDisplay" style="width: 300px; margin:10px" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Title</label>
                 <input type="text" class="form-control" id="heading" asp-for="Title" />
             </div>
 
             <div class="mb-3">
-                <label cladd="form-label">Description</label>
+                <label class="form-label">Description</label>
                 <input type="text" class="form-control" id="description" asp-for="Description" />
-            </div>
-
-            <div class="mb-3">
-                <label cladd="form-label">Image URL</label>
-                <input type="text" class="form-control" id="imageUrl" asp-for="ImageUrl" readonly />
-            </div>
-
-            <div class="mb-3">
-                <label cladd="form-label">URL Handle</label>
-                <input type="text" class="form-control" id="urlHandle" asp-for="UrlHandle" />
             </div>
 
             <div class="form-check mb-3">

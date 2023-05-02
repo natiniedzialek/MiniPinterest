@@ -15,7 +15,12 @@
         @foreach (var pin in Model)
         {
             <div class="col">
-                <a href="@Url.Action("Details", "Pin", new { id = pin.Id })">
+                <a 
+                    asp-area=""
+                    asp-controller="PinDetails"
+                    asp-action="Index"
+                    asp-route-urlHandle="@pin.Id"
+                >
                     <img src="@pin.ImageUrl" alt="@pin.Title" class="img-fluid rounded-corners" />
                 </a>
                 <div class="text-center">

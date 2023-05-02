@@ -1,8 +1,57 @@
-﻿@{
+﻿@using MiniPinterest.Web.Models.Domain;
+@model List<MiniPinterest.Web.Models.Domain.Pin>
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container col-xxl-8 px-2 py-3">
+    <div class="row align-items-center g-5 py-5">
+        <div class="col-12 col-lg-6">
+            <h1 class="display-5 fw-bold lh-1 mb-3">
+                Mini Pinterest
+            </h1>
+            <p class="lead">
+                Share your inspirations with others!
+            </p>
+        </div>
+    </div>
 </div>
+
+<div class="row row-cols-5 row-with-margin">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var pin in Model)
+        {
+            <div class="col">
+                <a 
+                    asp-area=""
+                    asp-controller="PinDetails"
+                    asp-action="Index"
+                    asp-route-urlHandle="@pin.Id"
+                >
+                    <img src="@pin.ImageUrl" alt="@pin.Title" class="img-fluid rounded-corners" />
+                </a>
+                <div class="text-center">
+                    @pin.Title
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>
+            No pins created yet!
+        </p>
+    }
+</div>
+
+<style>
+    .rounded-corners {
+        border-radius: 15px;
+    }
+
+    .row-with-margin {
+        margin: 30px;
+    }
+</style>
+

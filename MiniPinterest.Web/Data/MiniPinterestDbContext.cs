@@ -5,7 +5,7 @@ namespace MiniPinterest.Web.Data
 {
     public class MiniPinterestDbContext : DbContext
     {
-        public MiniPinterestDbContext(DbContextOptions options) : base(options)
+        public MiniPinterestDbContext(DbContextOptions<MiniPinterestDbContext> options) : base(options)
         {
         }
 

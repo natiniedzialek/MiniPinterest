@@ -1,6 +1,18 @@
 ﻿@using MiniPinterest.Web.Models.Domain;
 @model List<MiniPinterest.Web.Models.Domain.Pin>
 @{
+    List<List<Pin>> ?cols = null;
+    @if (Model != null && Model.Any())
+    {
+        cols = new();
+
+        for (int i = 0; i < 5; i++)
+        {
+            var col = Model.Where((x, j) => j % 5 == i).ToList();
+            cols.Add(col);
+        }
+    }
+
     ViewData["Title"] = "Home Page";
 }
 
@@ -17,23 +29,21 @@
     </div>
 </div>
 
-<div class="row row-cols-5 row-with-margin">
-    @if (Model != null && Model.Any())
+<div class="table-with-margin">
+    @if (cols != null)
     {
-        @foreach (var pin in Model)
+        @foreach (var col in cols)
         {
-            <div class="col">
-                <a 
-                    asp-area=""
-                    asp-controller="PinDetails"
-                    asp-action="Index"
-                    asp-route-urlHandle="@pin.Id"
-                >
-                    <img src="@pin.ImageUrl" alt="@pin.Title" class="img-fluid rounded-corners" />
-                </a>
-                <div class="text-center">
-                    @pin.Title
-                </div>
+            <div class="column">
+                @foreach (Pin pin in col)
+                {
+                        <a asp-area=""
+                        asp-controller="PinDetails"
+                        asp-action="Index"
+                        asp-route-urlHandle="@pin.Id">
+                            <img src="@pin.ImageUrl" alt="@pin.Title"/>
+                        </a>
+                }
             </div>
         }
     }
@@ -46,12 +56,24 @@
 </div>
 
 <style>
-    .rounded-corners {
-        border-radius: 15px;
+    .table-with-margin {
+      margin: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0 4px;
     }
 
-    .row-with-margin {
-        margin: 30px;
+    .column {
+      flex: 20%;
+      max-width: 20%;
+      padding: 0 4px;
+    }
+
+    .column img {
+      margin-top: 8px;
+      vertical-align: middle;
+      width: 100%;
+      border-radius: 15px;
     }
 </style>
 

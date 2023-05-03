@@ -4,4 +4,36 @@
     ViewData["Title"] = Model.Title;
 }
 
+<style>
+    .pin-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .image-box img {
+        width: auto;
+        height: 80vh;
+        border: 3px solid white;
+        border-radius: 10px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+    .title {
+        font-weight: bold;
+        font-style: italic;
+        font-size: 20px;
+        margin-bottom: 0;
+    }
+</style>
 
+<div class="pin-container py-3">
+    <div class="image-box py-3">
+        <img src="@Model.ImageUrl" />
+    </div>
+    <p class="title">
+        @Model.Title
+    </p>
+    <p class="description" style="text-align:center; width: 50%">
+        @Model.Description
+    </p>
+</div>

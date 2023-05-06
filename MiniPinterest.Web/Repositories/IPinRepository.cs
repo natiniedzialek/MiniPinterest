@@ -6,6 +6,7 @@ namespace MiniPinterest.Web.Repositories
     {
         Task<IEnumerable<Pin>> GetAllAsync();
         Task<Pin?> GetByIdAsync(Guid id);
+        Task<IEnumerable<Pin>> GetByAuthorIdAsync(Guid authorId);
         Task<Pin> AddAsync(Pin pin);
         Task<Pin?> UpdateAsync(Pin pin);
         Task<Pin?> DeleteAsync(Guid id);

@@ -23,7 +23,7 @@ namespace MiniPinterest.Web.Repositories
 
         public async Task<Pin?> DeleteAsync(Guid id)
         {
-            Pin existingPin = await miniPinterestDbContext.Pins.FindAsync(id);
+            Pin ?existingPin = await miniPinterestDbContext.Pins.FindAsync(id);
 
             if (existingPin != null)
             {
@@ -48,6 +48,15 @@ namespace MiniPinterest.Web.Repositories
                 .Pins
                 .Include(x => x.Boards)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<Pin>> GetByAuthorIdAsync(Guid authorId)
+        {
+            return await miniPinterestDbContext
+                .Pins
+                .Include(x => x.Boards)
+                .Where(x => x.AuthorId == authorId)
+                .ToListAsync();
         }
 
         public async Task<Pin?> UpdateAsync(Pin pin)

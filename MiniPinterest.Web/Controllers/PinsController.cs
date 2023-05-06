@@ -1,17 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MiniPinterest.Web.Models.Domain;
 using MiniPinterest.Web.Models.ViewModels;
 using MiniPinterest.Web.Repositories;
+using System.Security.Claims;
 
 namespace MiniPinterest.Web.Controllers
 {
+    [Authorize]
     public class PinsController : Controller
     {
         private readonly IPinRepository pinRepository;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IAuthorizationService authorizationService;
 
-        public PinsController(IPinRepository pinRepository)
+        public PinsController(IPinRepository pinRepository, IHttpContextAccessor httpContextAccessor, IAuthorizationService authorizationService)
         {
             this.pinRepository = pinRepository;
+            this.httpContextAccessor = httpContextAccessor;
+            this.authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -24,10 +32,21 @@ namespace MiniPinterest.Web.Controllers
         [ActionName("Add")]
         public async Task<IActionResult> Add(AddPinRequest addPinRequest)
         {
+            bool authorIdSuccesfullyParsed = Guid.TryParse(httpContextAccessor
+                    .HttpContext?
+                    .User
+                    .FindFirstValue(ClaimTypes.NameIdentifier),
+                    out Guid authorGuid);
+
+            if(!authorIdSuccesfullyParsed)
+            {
+                // error
+                return View();
+            }
+
             Pin pin = new()
             {
-                Id = Guid.NewGuid(),
-                AuthorId = Guid.NewGuid(),
+                AuthorId = authorGuid,
                 Title = addPinRequest.Title,
                 Description = addPinRequest.Description,
                 ImageUrl = addPinRequest.ImageUrl,
@@ -38,6 +57,7 @@ namespace MiniPinterest.Web.Controllers
 
             await pinRepository.AddAsync(pin);
 
+            // success
             return RedirectToAction("List");
         }
 
@@ -45,9 +65,26 @@ namespace MiniPinterest.Web.Controllers
         [ActionName("List")]
         public async Task<IActionResult> List()
         {
-            IEnumerable<Pin>? pins = await pinRepository.GetAllAsync();
+            bool authorIdSuccesfullyParsed = Guid.TryParse(httpContextAccessor
+                    .HttpContext?
+                    .User
+                    .FindFirstValue(ClaimTypes.NameIdentifier),
+                    out Guid authorGuid);
 
-            return View(pins);
+            if (!authorIdSuccesfullyParsed)
+            {
+                // error
+                return View(null);
+            }
+
+            IEnumerable<Pin>? pins = await pinRepository.GetByAuthorIdAsync(authorGuid);
+
+            if (!pins.IsNullOrEmpty())
+            {
+                return View(pins);
+            }
+
+            return View(null);
         }
 
         [HttpGet]
@@ -57,19 +94,30 @@ namespace MiniPinterest.Web.Controllers
 
             if (pin != null)
             {
-                EditPinRequest editPinRequest = new()
-                {
-                    Id = pin.Id,
-                    AuthorId = pin.AuthorId,
-                    Title = pin.Title,
-                    Description = pin.Description,
-                    ImageUrl =pin.ImageUrl,
-                    CreatedAt = pin.CreatedAt,
-                    IsPublic = pin.IsPublic,
-                    Boards = pin.Boards
-                };
+                var authorizationResult = await authorizationService.AuthorizeAsync(httpContextAccessor
+                    .HttpContext?
+                    .User, pin, "UserIsPinAuthorPolicy");
 
-                return View(editPinRequest);
+                if (authorizationResult != null && authorizationResult.Succeeded)
+                {
+                    EditPinRequest editPinRequest = new()
+                    {
+                        Id = pin.Id,
+                        AuthorId = pin.AuthorId,
+                        Title = pin.Title,
+                        Description = pin.Description,
+                        ImageUrl = pin.ImageUrl,
+                        CreatedAt = pin.CreatedAt,
+                        IsPublic = pin.IsPublic,
+                        Boards = pin.Boards
+                    };
+
+                    return View(editPinRequest);
+                }
+                else 
+                {
+                    return View("AccessDenied");
+                }
             }
 
             return View(null);

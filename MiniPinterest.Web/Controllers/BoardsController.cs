@@ -1,18 +1,27 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MiniPinterest.Web.Models.Domain;
 using MiniPinterest.Web.Models.ViewModels;
 using MiniPinterest.Web.Repositories;
+using System.Net.NetworkInformation;
+using System.Security.Claims;
 
 namespace MiniPinterest.Web.Controllers
 {
+    [Authorize]
     public class BoardsController : Controller
     {
         private readonly IBoardRepository boardRepository;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IAuthorizationService authorizationService;
 
-        public BoardsController(IBoardRepository boardRepository)
+        public BoardsController(IBoardRepository boardRepository, IHttpContextAccessor httpContextAccessor, IAuthorizationService authorizationService)
         {
             this.boardRepository = boardRepository;
+            this.httpContextAccessor = httpContextAccessor;
+            this.authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -25,10 +34,21 @@ namespace MiniPinterest.Web.Controllers
         [ActionName("Add")]
         public async Task<IActionResult> Add(AddBoardRequest addBoardRequest)
         {
+            bool authorIdSuccesfullyParsed = Guid.TryParse(httpContextAccessor
+                    .HttpContext?
+                    .User
+                    .FindFirstValue(ClaimTypes.NameIdentifier),
+                    out Guid authorGuid);
+
+            if (!authorIdSuccesfullyParsed)
+            {
+                // error
+                return View();
+            }
+
             Board board = new()
             {
-                Id = Guid.NewGuid(),
-                AuthorId = Guid.NewGuid(),
+                AuthorId = authorGuid,
                 Name = addBoardRequest.Name,
                 Description = addBoardRequest.Description,
                 CreatedAt = DateTime.Now,
@@ -45,9 +65,26 @@ namespace MiniPinterest.Web.Controllers
         [ActionName("List")]
         public async Task<IActionResult> List()
         {
-            IEnumerable<Board> boards = await boardRepository.GetAllAsync();
+            bool authorIdSuccesfullyParsed = Guid.TryParse(httpContextAccessor
+                    .HttpContext?
+                    .User
+                    .FindFirstValue(ClaimTypes.NameIdentifier),
+                    out Guid authorGuid);
 
-            return View(boards);
+            if (!authorIdSuccesfullyParsed)
+            {
+                // error
+                return View(null);
+            }
+
+            IEnumerable<Board> boards = await boardRepository.GetByAuthorIdAsync(authorGuid);
+
+            if (!boards.IsNullOrEmpty())
+            {
+                return View(boards);
+            }
+
+            return View(null);
         }
 
         [HttpGet]
@@ -57,18 +94,29 @@ namespace MiniPinterest.Web.Controllers
 
             if(board != null)
             {
-                EditBoardRequest editBoardRequest = new()
-                {
-                    Id = board.Id,
-                    AuthorId = board.AuthorId,
-                    Name = board.Name,
-                    Description = board.Description,
-                    CreatedAt = board.CreatedAt,
-                    IsPublic = board.IsPublic,
-                    Pins = board.Pins
-                };
+                var authorizationResult = await authorizationService.AuthorizeAsync(httpContextAccessor
+                    .HttpContext?
+                    .User, board, "UserIsPinAuthorPolicy");
 
-                return View(editBoardRequest);
+                if (authorizationResult != null && authorizationResult.Succeeded)
+                {
+                    EditBoardRequest editBoardRequest = new()
+                    {
+                        Id = board.Id,
+                        AuthorId = board.AuthorId,
+                        Name = board.Name,
+                        Description = board.Description,
+                        CreatedAt = board.CreatedAt,
+                        IsPublic = board.IsPublic,
+                        Pins = board.Pins
+                    };
+
+                    return View(editBoardRequest);
+                }
+                else
+                {
+                    return View("AccessDenied");
+                }
             }
 
             return View(null);

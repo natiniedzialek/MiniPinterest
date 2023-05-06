@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MiniPinterest.Web.Authorization;
 using MiniPinterest.Web.Data;
 using MiniPinterest.Web.Repositories;
 
@@ -22,6 +25,18 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 builder.Services.AddScoped<IPinRepository, PinRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
+
+builder.Services.AddScoped<IAuthorizationHandler, UserIsPinAuthorAuthorizationHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UserIsPinAuthorPolicy", policy => policy.Requirements.Add(new UserIsPinAuthorRequirement()));
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = new PathString("/Shared/AccessDenied");
+            });
 
 var app = builder.Build();
 

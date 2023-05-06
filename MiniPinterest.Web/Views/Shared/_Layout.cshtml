@@ -21,54 +21,57 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                My Profile
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item"
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    My Profile
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item"
                                        asp-area=""
                                        asp-controller="Boards"
                                        asp-action="List">
-                                       Boards
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
+                                            Boards
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
                                        asp-area=""
                                        asp-controller="Pins"
                                        asp-action="List">
-                                       Pins
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                New
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" 
+                                            Pins
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    New
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" 
                                         asp-area="" 
                                         asp-controller="Boards"
                                         asp-action="Add">
-                                        Board
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
+                                            Board
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
                                        asp-area=""
                                        asp-controller="Pins"
                                        asp-action="Add">
-                                       Pin
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                                            Pin
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    }
 
                     <div class="d-flex align-items-center">
                         @if (signInManager.IsSignedIn(User))

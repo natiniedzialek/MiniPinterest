@@ -32,6 +32,9 @@
                 <input class="form-check-input" type="checkbox" id="public" value="true" asp-for="IsPublic">
             </div>
 
+            <input type="hidden" id="id" value=@Model.Id asp-for="Id">
+            <input type="hidden" id="id" value=@Model.AuthorId asp-for="AuthorId">
+
             <div class="mb-3">
                 <button type="submit" class="btn btn-dark">Update</button>
                 <button class="btn btn-danger ms-2" type="submit"

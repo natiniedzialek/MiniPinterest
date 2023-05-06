@@ -6,7 +6,7 @@ namespace MiniPinterest.Web.Controllers
 {
     public class AccountController : Controller
     {
-        UserManager<IdentityUser> userManager;
+        private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
 
         public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
@@ -26,6 +26,7 @@ namespace MiniPinterest.Web.Controllers
         {
             var identityUser = new IdentityUser
             {
+                Id = Guid.NewGuid().ToString(),
                 UserName = registerRequest.Username,
                 Email = registerRequest.Email
             };
@@ -39,7 +40,7 @@ namespace MiniPinterest.Web.Controllers
                 if (addRoleResult.Succeeded) 
                 {
                     // success
-                    return RedirectToAction("Register");
+                    return RedirectToAction("Login");
                 }
             }
 
@@ -48,9 +49,13 @@ namespace MiniPinterest.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl)
         {
-            return View();
+            var model = new LoginRequest
+            {
+                ReturnUrl = returnUrl
+            };
+            return View(model);
         }
 
         [HttpPost]
@@ -61,7 +66,11 @@ namespace MiniPinterest.Web.Controllers
 
             if (signInResult != null  && signInResult.Succeeded) 
             {
-                return RedirectToAction("Index", "Home");
+                if (string.IsNullOrWhiteSpace(loginRequest.ReturnUrl))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                return Redirect(loginRequest.ReturnUrl);
             }
 
             return View();

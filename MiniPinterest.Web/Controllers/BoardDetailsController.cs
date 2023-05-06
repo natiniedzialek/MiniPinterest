@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MiniPinterest.Web.Repositories;
 
 namespace MiniPinterest.Web.Controllers
 {
+    [Authorize]
     public class BoardDetailsController : Controller
     {
         private readonly IBoardRepository boardRepository;

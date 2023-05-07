@@ -2,6 +2,7 @@
 using MiniPinterest.Web.Data;
 using MiniPinterest.Web.Models.Domain;
 using MiniPinterest.Web.Models.ViewModels;
+using System.Linq;
 
 namespace MiniPinterest.Web.Repositories
 {
@@ -33,7 +34,8 @@ namespace MiniPinterest.Web.Repositories
         {
             return await miniPinterestDbContext
                 .Boards
-                .FindAsync(id);
+                .Include(x => x.Pins)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<Board>> GetByAuthorIdAsync(Guid authorId)
@@ -47,7 +49,10 @@ namespace MiniPinterest.Web.Repositories
 
         public async Task<Board?> UpdateAsync(Board board)
         {
-            Board? existingBoard = await miniPinterestDbContext.Boards.FindAsync(board.Id);
+            Board? existingBoard = await miniPinterestDbContext
+                                            .Boards
+                                            .Include(x => x.Pins)
+                                            .FirstOrDefaultAsync(x => x.Id == board.Id);
 
             if (existingBoard != null) 
             {
@@ -60,6 +65,30 @@ namespace MiniPinterest.Web.Repositories
 
                 return existingBoard;
             }
+            return null;
+        }
+
+        public async Task<Pin?> AddPinAsync(Guid boardId, Guid pinId)
+        {
+            // check if board and pin exist in db
+            Board? boardFound = await miniPinterestDbContext
+                                        .Boards
+                                        .Include(x => x.Pins)
+                                        .FirstOrDefaultAsync(x => x.Id == boardId);
+
+            Pin? pinFound = await miniPinterestDbContext
+                                    .Pins
+                                    .FirstOrDefaultAsync(x => x.Id == pinId);
+
+            if (pinFound != null && boardFound != null && !boardFound.Pins.Contains(pinFound))
+            {
+                boardFound.Pins.Add(pinFound);
+                await miniPinterestDbContext.SaveChangesAsync();
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+                // czy board trzeba dodawać do pina ???
+                return pinFound;
+            }
+
             return null;
         }
 

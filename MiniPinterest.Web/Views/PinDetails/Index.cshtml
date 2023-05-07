@@ -24,16 +24,43 @@
         font-size: 20px;
         margin-bottom: 0;
     }
+
+    .button {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #c0c0c0;
+        color: #fff;
+        font-size: 24px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
 </style>
 
 <div class="pin-container py-3">
     <div class="image-box py-3">
         <img src="@Model.ImageUrl" />
     </div>
+
     <p class="title">
         @Model.Title
     </p>
+
     <p class="description" style="text-align:center; width: 50%">
         @Model.Description
     </p>
+
+    <form method="get">
+        <div class="mb-3">
+            <a href='@Url.Action("AddPinToBoard", "BoardDetails", new { urlHandle = @Model.Id })'>
+                <input type='button' value='+' />
+            </a>
+        </div>
+    </form>
 </div>

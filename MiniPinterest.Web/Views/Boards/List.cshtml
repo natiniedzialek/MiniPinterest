@@ -13,23 +13,30 @@
     {
         <div class="board-container" py-5>
             @foreach (var board in Model)
-            {
-                <div class="board-item" data-url="@Url.Action("BoardDetails", "Board", new { id = board.Id })">
-                    <h2>@board.Name</h2>
-                    <p style="font-size:12px">
-                        @{
-                            string output = @board.IsPublic ? "Public" : "Private";
-                        }
-                        @output
-                    </p>
-                    <p class="description">@board.Description</p>
-                    <p style="font-size:12px">Created at @board.CreatedAt.ToString("MM/dd/yyyy")</p>
-                    <p>
-                        <a asp-area="" asp-controller="Boards" asp-action="Edit" asp-route-id="@board.Id">
-                            Edit
-                        </a>
-                    </p>
-                </div>
+            {   
+                <a 
+                    asp-area="" 
+                    asp-controller="BoardDetails" 
+                    asp-action="Index" 
+                    asp-route-urlHandle="@board.Id">
+
+                    <div class="board-item" data-url="@Url.Action("BoardDetails", "Board", new { id = board.Id })">
+                        <h2>@board.Name</h2>
+                        <p style="font-size:12px">
+                            @{
+                                string output = @board.IsPublic ? "Public" : "Private";
+                            }
+                            @output
+                        </p>
+                        <p class="description">@board.Description</p>
+                        <p style="font-size:12px">Created at @board.CreatedAt.ToString("MM/dd/yyyy")</p>
+                        <p>
+                            <a asp-area="" asp-controller="Boards" asp-action="Edit" asp-route-id="@board.Id">
+                                Edit
+                            </a>
+                        </p>
+                    </div>
+                </a>
             }
         </div>
     }
@@ -74,14 +81,3 @@
     }
 </style>
 
-<script>
-    // Add a click event handler to each board container
-    document.querySelectorAll('.board-item').forEach(function (boardItem) {
-        boardItem.addEventListener('click', function () {
-            // Get the URL of the target page from the data-url attribute
-            var url = this.getAttribute('data-url');
-            // Navigate to the target page
-            window.location.href = url;
-        });
-    });
-</script>

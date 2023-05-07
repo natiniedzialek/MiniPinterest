@@ -96,7 +96,7 @@ namespace MiniPinterest.Web.Controllers
             {
                 var authorizationResult = await authorizationService.AuthorizeAsync(httpContextAccessor
                     .HttpContext?
-                    .User, board, "UserIsPinAuthorPolicy");
+                    .User, board, "UserIsBoardAuthorPolicy");
 
                 if (authorizationResult != null && authorizationResult.Succeeded)
                 {

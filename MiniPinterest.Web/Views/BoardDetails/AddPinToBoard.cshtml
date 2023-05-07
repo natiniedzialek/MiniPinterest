@@ -1,0 +1,22 @@
+﻿@model MiniPinterest.Web.Models.ViewModels.AddPinToBoardRequest
+
+@{
+}
+
+<div class="container py-5">
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Boards</label>
+            <select class="form-select"
+                    asp-items="@Model.Boards"
+                    asp-for="BoardId"></select>
+        </div>
+
+        <input type="hidden" id="pinId" value=@Model.PinId asp-for="PinId">
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-dark">Add</button>
+        </div>
+    </form>
+</div>
+

@@ -26,7 +26,6 @@ namespace MiniPinterest.Web.Controllers
         {
             var identityUser = new IdentityUser
             {
-                Id = Guid.NewGuid().ToString(),
                 UserName = registerRequest.Username,
                 Email = registerRequest.Email
             };

@@ -27,10 +27,16 @@ builder.Services.AddScoped<IPinRepository, PinRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 
 builder.Services.AddScoped<IAuthorizationHandler, UserIsPinAuthorAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, UserIsBoardAuthorAuthorizationHandler>();
 
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("UserIsPinAuthorPolicy", policy => policy.Requirements.Add(new UserIsPinAuthorRequirement()));
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UserIsBoardAuthorPolicy", policy => policy.Requirements.Add(new UserIsBoardAuthorRequirement()));
 });
 
 builder.Services.ConfigureApplicationCookie(options =>

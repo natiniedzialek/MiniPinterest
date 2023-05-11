@@ -1,18 +1,7 @@
 ﻿@using MiniPinterest.Web.Models.Domain;
-@model List<MiniPinterest.Web.Models.Domain.Pin>
+@model List<List<MiniPinterest.Web.Models.Domain.Pin>>
+
 @{
-    List<List<Pin>> ?cols = null;
-    @if (Model != null && Model.Any())
-    {
-        cols = new();
-
-        for (int i = 0; i < 5; i++)
-        {
-            var col = Model.Where((x, j) => j % 5 == i).ToList();
-            cols.Add(col);
-        }
-    }
-
     ViewData["Title"] = "Home Page";
 }
 
@@ -29,19 +18,19 @@
     </div>
 </div>
 
-<div class="table-with-margin">
-    @if (cols != null)
+<div class="pin-gallery">
+    @if (Model != null && Model.Any())
     {
-        @foreach (var col in cols)
+        @foreach (var col in Model)
         {
-            <div class="column">
+            <div class="pin-gallery-column">
                 @foreach (Pin pin in col)
                 {
                         <a asp-area=""
                         asp-controller="PinDetails"
                         asp-action="Index"
                         asp-route-urlHandle="@pin.Id">
-                            <img src="@pin.ImageUrl" alt="@pin.Title"/>
+                            <img class="m-1 rounded-corners" src="@pin.ImageUrl" alt="@pin.Title" />
                         </a>
                 }
             </div>
@@ -54,26 +43,3 @@
         </p>
     }
 </div>
-
-<style>
-    .table-with-margin {
-      margin: 30px;
-      display: flex;
-      flex-wrap: wrap;
-      padding: 0 4px;
-    }
-
-    .column {
-      flex: 20%;
-      max-width: 20%;
-      padding: 0 4px;
-    }
-
-    .column img {
-      margin-top: 8px;
-      vertical-align: middle;
-      width: 100%;
-      border-radius: 15px;
-    }
-</style>
-

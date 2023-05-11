@@ -1,5 +1,7 @@
 ﻿@model List<MiniPinterest.Web.Models.Domain.Pin>
+
 @{
+    ViewData["Title"] = "My Pins";
 }
 
 <div class="bg-secondary bg-opacity-10 py-2">
@@ -8,48 +10,37 @@
     </div>
 </div>
 
-
-<div class="row row-cols-5 row-with-margin">
-    @if (Model != null && Model.Any())
-    {
-        @foreach (var pin in Model)
+<div class="container py-5">
+    <div class="row row-cols-5 m-1">
+        @if (Model != null && Model.Any())
         {
-            <div class="col">
-                <a 
-                    asp-area=""
-                    asp-controller="PinDetails"
-                    asp-action="Index"
-                    asp-route-urlHandle="@pin.Id"
-                >
-                    <img src="@pin.ImageUrl" alt="@pin.Title" class="img-fluid rounded-corners" />
-                </a>
-                <div class="text-center">
-                    @pin.Title
-                    <a asp-area=""
-                   asp-controller="Pins"
-                   asp-action="Edit"
-                   asp-route-id="@pin.Id"
-                    >Edit</a>
+            @foreach (var pin in Model)
+            {
+                <div class="col">
+                    <a 
+                        asp-area=""
+                        asp-controller="PinDetails"
+                        asp-action="Index"
+                        asp-route-urlHandle="@pin.Id"
+                    >
+                        <img src="@pin.ImageUrl" alt="@pin.Title" class="img-fluid rounded-corners" />
+                    </a>
+                    <div class="text-center">
+                        @pin.Title
+                        <a asp-area=""
+                       asp-controller="Pins"
+                       asp-action="Edit"
+                       asp-route-id="@pin.Id"
+                        >Edit</a>
+                    </div>
                 </div>
-            </div>
+            }
         }
-    }
-    else
-    {
-        <p>
-            No pins created yet!
-        </p>
-    }
+        else
+        {
+            <p>
+                No pins created yet!
+            </p>
+        }
+    </div>
 </div>
-
-<style>
-    .rounded-corners {
-        border-radius: 15px;
-    }
-
-    .row-with-margin {
-        margin: 30px;
-    }
-</style>
-
-

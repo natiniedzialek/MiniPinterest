@@ -84,8 +84,7 @@ namespace MiniPinterest.Web.Repositories
             {
                 boardFound.Pins.Add(pinFound);
                 await miniPinterestDbContext.SaveChangesAsync();
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-                // czy board trzeba dodawać do pina ???
+
                 return pinFound;
             }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MiniPinterest.Web.Helpers.Abstract;
 using MiniPinterest.Web.Models;
 using MiniPinterest.Web.Repositories;
 using System.Diagnostics;
@@ -9,19 +10,22 @@ namespace MiniPinterest.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IPinRepository pinRepository;
+        private readonly IPinHelper pinHelper;
 
-        public HomeController(ILogger<HomeController> logger, IPinRepository pinRepository)
+        public HomeController(ILogger<HomeController> logger, IPinRepository pinRepository, IPinHelper pinHelper)
         {
             _logger = logger;
             this.pinRepository = pinRepository;
+            this.pinHelper = pinHelper;
         }
 
         public async Task<IActionResult> Index()
         {
             var pins = await pinRepository.GetAllAsync();
-            var public_pins = pins.Where(x => x.IsPublic).ToList();
+            pins = pinHelper.GetPublicPins(pins);
+            var pinsColumns = pinHelper.DivideIntoColumns(pins, 5);
 
-            return View(public_pins);
+            return View(pinsColumns);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

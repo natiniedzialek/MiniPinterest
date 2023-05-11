@@ -1,66 +1,34 @@
 ﻿@model MiniPinterest.Web.Models.Domain.Pin
 
 @{
-    ViewData["Title"] = Model.Title;
+    if (Model != null) ViewData["Title"] = Model.Title;
 }
 
-<style>
-    .pin-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    .image-box img {
-        width: auto;
-        height: 80vh;
-        border: 3px solid white;
-        border-radius: 10px;
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-    }
-    .title {
-        font-weight: bold;
-        font-style: italic;
-        font-size: 20px;
-        margin-bottom: 0;
-    }
-
-    .button {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: #c0c0c0;
-        color: #fff;
-        font-size: 24px;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-</style>
-
-<div class="pin-container py-3">
-    <div class="image-box py-3">
-        <img src="@Model.ImageUrl" />
-    </div>
-
-    <p class="title">
-        @Model.Title
-    </p>
-
-    <p class="description" style="text-align:center; width: 50%">
-        @Model.Description
-    </p>
-
-    <form method="get">
-        <div class="mb-3">
-            <a href='@Url.Action("AddPinToBoard", "BoardDetails", new { urlHandle = @Model.Id })'>
-                <input type='button' value='+' />
-            </a>
+<div class="pin-details-container py-3">
+    @if (Model != null)
+    {
+        <div class="pin-details-box py-3">
+            <img src="@Model.ImageUrl" />
         </div>
-    </form>
+
+        <p class="pin-details-title">
+            @Model.Title
+        </p>
+
+        <p class="pin-details-description" style="">
+            @Model.Description
+        </p>
+
+        <form method="get">
+            <div class="plus-button-container mb-3">
+                <a href='@Url.Action("AddPinToBoard", "BoardDetails", new { urlHandle = @Model.Id })'>
+                    <input type='button' class="plus-button" value='+' />
+                </a>
+            </div>
+        </form>
+    }
+    else
+    {
+        <p>Pin not found!</p>
+    }
 </div>

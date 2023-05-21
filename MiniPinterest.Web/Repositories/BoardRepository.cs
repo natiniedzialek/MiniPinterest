@@ -91,6 +91,29 @@ namespace MiniPinterest.Web.Repositories
             return null;
         }
 
+        public async Task<Pin?> RemovePinAsync(Guid boardId, Guid pinId)
+        {
+            // check if board and pin exist in db
+            Board? boardFound = await miniPinterestDbContext
+                                        .Boards
+                                        .Include(x => x.Pins)
+                                        .FirstOrDefaultAsync(x => x.Id == boardId);
+
+            Pin? pinFound = await miniPinterestDbContext
+                                    .Pins
+                                    .FirstOrDefaultAsync(x => x.Id == pinId);
+
+            if (pinFound != null && boardFound != null && boardFound.Pins.Contains(pinFound))
+            {
+                boardFound.Pins.Remove(pinFound);
+                await miniPinterestDbContext.SaveChangesAsync();
+
+                return pinFound;
+            }
+
+            return null;
+        }
+
         public async Task<Board?> DeleteAsync(Guid id)
         {
             Board ?existingBoard = await miniPinterestDbContext.Boards.FindAsync(id);

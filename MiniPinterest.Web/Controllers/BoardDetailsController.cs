@@ -97,5 +97,19 @@ namespace MiniPinterest.Web.Controllers
             // success
             return RedirectToAction("Index", "PinDetails", new { urlHandle = addPinToBoardRequest.PinId });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RemovePinFromBoard(Guid boardId, Guid pinId)
+        {
+            Pin? pinRemoved = await boardRepository.RemovePinAsync(boardId, pinId);
+
+            if(pinRemoved == null)
+            {
+                // error
+            }
+
+            // success
+            return RedirectToAction("Index", new { urlHandle = boardId.ToString()} );
+        }
     }
 }

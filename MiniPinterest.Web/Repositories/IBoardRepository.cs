@@ -10,6 +10,7 @@ namespace MiniPinterest.Web.Repositories
         Task<Board> AddAsync(Board board);
         Task<Board?> UpdateAsync(Board board);
         Task<Pin?> AddPinAsync(Guid boardId, Guid pinId);
+        Task<Pin?> RemovePinAsync(Guid boardId, Guid pinId);
         Task<Board?> DeleteAsync(Guid id);
     }
 }

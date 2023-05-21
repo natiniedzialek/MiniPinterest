@@ -17,12 +17,14 @@ namespace MiniPinterest.Web.Controllers
         private readonly IBoardRepository boardRepository;
         private readonly IPinRepository pinRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IAuthorizationService authorizationService;
 
-        public BoardDetailsController(IBoardRepository boardRepository, IPinRepository pinRepository, IHttpContextAccessor httpContextAccessor)
+        public BoardDetailsController(IBoardRepository boardRepository, IPinRepository pinRepository, IHttpContextAccessor httpContextAccessor, IAuthorizationService authorizationService)
         {
             this.boardRepository = boardRepository;
             this.pinRepository = pinRepository;
             this.httpContextAccessor = httpContextAccessor;
+            this.authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -33,7 +35,19 @@ namespace MiniPinterest.Web.Controllers
             if (guidSuccesfullyParsed)
             {
                 var board = await boardRepository.GetByIdAsync(boardId);
-                // show the pins saved on board
+
+                if (board != null && !board.IsPublic)
+                {
+                    var authorizationResult = await authorizationService.AuthorizeAsync(httpContextAccessor
+                        .HttpContext?
+                        .User, board, "UserIsBoardAuthorPolicy");
+                    // show the pins saved on board
+                    if (authorizationResult == null || !authorizationResult.Succeeded)
+                    {
+                        return View("AccessDenied");
+                    }
+                }
+
                 return View(board);
             }
             return View(null);

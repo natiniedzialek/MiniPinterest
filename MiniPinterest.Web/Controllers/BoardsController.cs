@@ -31,7 +31,6 @@ namespace MiniPinterest.Web.Controllers
         }
 
         [HttpPost]
-        [ActionName("Add")]
         public async Task<IActionResult> Add(AddBoardRequest addBoardRequest)
         {
             bool authorIdSuccesfullyParsed = Guid.TryParse(httpContextAccessor
@@ -62,7 +61,6 @@ namespace MiniPinterest.Web.Controllers
         }
 
         [HttpGet]
-        [ActionName("List")]
         public async Task<IActionResult> List()
         {
             bool authorIdSuccesfullyParsed = Guid.TryParse(httpContextAccessor
@@ -79,12 +77,7 @@ namespace MiniPinterest.Web.Controllers
 
             IEnumerable<Board> boards = await boardRepository.GetByAuthorIdAsync(authorGuid);
 
-            if (!boards.IsNullOrEmpty())
-            {
-                return View(boards);
-            }
-
-            return View(null);
+            return View(boards);
         }
 
         [HttpGet]

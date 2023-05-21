@@ -7,27 +7,35 @@
 
 <div class="container py-5">
     <div class="row row-cols-5 m-1">
-        @if (Model != null && Model.Pins.Any())
+        @if (Model != null)
         {
-            @foreach (var pin in Model.Pins)
-            {
-                <div class="col">
-                    <a asp-area=""
-                        asp-controller="PinDetails"
-                        asp-action="Index"
-                        asp-route-urlHandle="@pin.Id">
-                        <img src="@pin.ImageUrl" alt="@pin.Title" class="img-fluid rounded-corners" />
-                    </a>
-                    <div class="text-center">
-                        @pin.Title
+            @if(Model.Pins.Any()) {
+                @foreach (var pin in Model.Pins)
+                {
+                    <div class="col">
+                        <a asp-area=""
+                            asp-controller="PinDetails"
+                            asp-action="Index"
+                            asp-route-urlHandle="@pin.Id">
+                            <img src="@pin.ImageUrl" alt="@pin.Title" class="img-fluid rounded-corners" />
+                        </a>
+                        <div class="text-center">
+                            @pin.Title
+                        </div>
                     </div>
-                </div>
+                }
+            }
+            else
+            {
+                <p>
+                    No pins added yet!
+                </p>
             }
         }
         else
         {
             <p>
-                No pins added yet!
+                No board found!
             </p>
         }
     </div>

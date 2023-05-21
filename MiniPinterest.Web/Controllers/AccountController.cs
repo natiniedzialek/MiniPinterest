@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MiniPinterest.Web.Models.ViewModels;
 
 namespace MiniPinterest.Web.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -48,7 +50,7 @@ namespace MiniPinterest.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login(string? returnUrl)
         {
             var model = new LoginRequest
             {

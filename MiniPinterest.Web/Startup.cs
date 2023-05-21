@@ -53,14 +53,6 @@ public class Startup
         {
             options.AccessDeniedPath = new PathString("/Shared/AccessDenied");
         });
-
-        services.AddMvc(config =>
-        {
-            var policy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .Build();
-            config.Filters.Add(new AuthorizeFilter(policy));
-        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

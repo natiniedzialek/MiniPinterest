@@ -16,7 +16,7 @@
         <div class="board-grid">
             @foreach (var board in Model)
             {
-                <div class="board-box" data-url="@Url.Action("Index", "BoardDetails", new { id = board.Id })">
+                <div class="board-box" data-url="@Url.Action("Index", "BoardDetails", new { urlHandle = board.Id })">
 
                     <div class="board-name" style="font-weight: bold">@board.Name</div>
                     <div class="board-public" style="">@((board.IsPublic ? "Public" : "Private"))</div>

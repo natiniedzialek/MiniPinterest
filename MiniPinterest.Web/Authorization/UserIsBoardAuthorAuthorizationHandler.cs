@@ -5,7 +5,7 @@ using MiniPinterest.Web.Models.Domain;
 namespace MiniPinterest.Web.Authorization
 {
     public class UserIsBoardAuthorAuthorizationHandler
-        : AuthorizationHandler<UserIsPinAuthorRequirement, Board>
+        : AuthorizationHandler<UserIsBoardAuthorRequirement, Board>
     {
         private readonly UserManager<IdentityUser> userManager;
 
@@ -14,7 +14,7 @@ namespace MiniPinterest.Web.Authorization
             this.userManager = userManager;
         }
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, UserIsPinAuthorRequirement requirement, Board resource)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, UserIsBoardAuthorRequirement requirement, Board resource)
         {
             if (context.User == null || resource == null)
             {

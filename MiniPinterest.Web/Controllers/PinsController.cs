@@ -79,12 +79,7 @@ namespace MiniPinterest.Web.Controllers
 
             IEnumerable<Pin>? pins = await pinRepository.GetByAuthorIdAsync(authorGuid);
 
-            if (!pins.IsNullOrEmpty())
-            {
-                return View(pins);
-            }
-
-            return View(null);
+            return View(pins);
         }
 
         [HttpGet]

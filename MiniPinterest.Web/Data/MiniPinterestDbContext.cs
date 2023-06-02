@@ -11,5 +11,6 @@ namespace MiniPinterest.Web.Data
 
         public DbSet<Pin> Pins { get; set; }
         public DbSet<Board> Boards { get; set; }
+        public DbSet<PinLike> PinLikes { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MiniPinterest.Web.Data;
 
@@ -11,9 +12,11 @@ using MiniPinterest.Web.Data;
 namespace MiniPinterest.Web.Migrations
 {
     [DbContext(typeof(MiniPinterestDbContext))]
-    partial class MiniPinterestDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230601083010_Likes")]
+    partial class Likes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

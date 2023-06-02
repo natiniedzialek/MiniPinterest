@@ -39,6 +39,7 @@ public class Startup
         services.AddScoped<IBoardRepository, BoardRepository>();
         services.AddScoped<IPinRepository, PinRepository>();
         services.AddScoped<IImageRepository, ImageRepository>();
+        services.AddScoped<IPinLikeRepository, PinLikeRepository>();
 
         services.AddScoped<IAuthorizationHandler, UserIsPinAuthorAuthorizationHandler>();
         services.AddScoped<IAuthorizationHandler, UserIsBoardAuthorAuthorizationHandler>();

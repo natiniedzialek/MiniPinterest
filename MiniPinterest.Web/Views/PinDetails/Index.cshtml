@@ -1,4 +1,7 @@
-﻿@model MiniPinterest.Web.Models.Domain.Pin
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+@inject UserManager<IdentityUser> userManager
+@model MiniPinterest.Web.Models.ViewModels.PinDetailsViewModel
 
 @{
     if (Model != null) ViewData["Title"] = Model.Title;
@@ -19,6 +22,15 @@
             @Model.Description
         </p>
 
+         
+        @if (signInManager.IsSignedIn(User))
+        {
+            <a id="likeBtn" style="cursor: pointer">
+                <i class="btn">🖤</i>
+            </a>
+            @Model.TotalLikes
+        }
+
         <form method="get">
             <div class="plus-button-container mb-3">
                 <a href='@Url.Action("AddPinToBoard", "BoardDetails", new { urlHandle = @Model.Id })'>
@@ -32,3 +44,25 @@
         <p>Pin not found!</p>
     }
 </div>
+
+
+<script>
+    const btnLikeElement = document.getElementById('likeBtn');
+
+    function addLike()
+    {
+        fetch('/api/PinLike/Add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body: JSON.stringify({
+                pinId: '@Model.Id',
+                userId: '@userManager.GetUserId(User)'
+            })
+        }).then(console.log('Request finished'));
+    }
+
+    btnLikeElement.addEventListener('click', addLike);
+</script>

@@ -7,6 +7,7 @@ Simple web app that allows users to share inspirational images with others.
 - logging
 - scrolling through other user’s pins 
 - saving pins on boards
+- pins likes
 
 ## Architecture
 - MVC

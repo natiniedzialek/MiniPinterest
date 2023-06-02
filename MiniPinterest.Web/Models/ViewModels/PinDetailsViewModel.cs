@@ -13,5 +13,8 @@ namespace MiniPinterest.Web.Models.ViewModels
         public bool IsPublic { get; set; }
         public ICollection<Board> Boards { get; set; }
         public int TotalLikes { get; set; }
+        public ICollection<PinComment> Comments { get; set; }
+        // for posting comments
+        public string? NewComment { get; set; }
     }
 }

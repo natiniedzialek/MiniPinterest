@@ -36,7 +36,7 @@ namespace MiniPinterest.Web.Controllers
 
             await pinLikeRepository.AddLikeAsync(pinLike);
 
-            return Ok();
+            return RedirectToAction("Index", "PinDetails", new { urlHandle = addLikeRequest.PinId.ToString() });
         }
     }
 }

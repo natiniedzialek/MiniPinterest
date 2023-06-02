@@ -39,6 +39,7 @@ namespace MiniPinterest.Web.Repositories
             return await miniPinterestDbContext
                 .Pins
                 .Include(x => x.Boards)
+                .Include(x => x.Comments)
                 .ToListAsync();
         }
 
@@ -47,6 +48,7 @@ namespace MiniPinterest.Web.Repositories
             return await miniPinterestDbContext
                 .Pins
                 .Include(x => x.Boards)
+                .Include(x => x.Comments)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -55,6 +57,7 @@ namespace MiniPinterest.Web.Repositories
             return await miniPinterestDbContext
                 .Pins
                 .Include(x => x.Boards)
+                .Include(x => x.Comments)
                 .Where(x => x.AuthorId == authorId)
                 .ToListAsync();
         }
@@ -64,6 +67,7 @@ namespace MiniPinterest.Web.Repositories
             Pin ?existingPin = await miniPinterestDbContext
                 .Pins
                 .Include(x => x.Boards)
+                .Include(x => x.Comments)
                 .FirstOrDefaultAsync(x => x.Id == pin.Id);
 
             if(existingPin != null)
